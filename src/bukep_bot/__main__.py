@@ -5,6 +5,7 @@ import sys
 from .bot import build_bot, build_dispatcher, setup_services
 from .config import load_config
 
+
 async def _run() -> None:
     logging.basicConfig(
         level=logging.INFO,

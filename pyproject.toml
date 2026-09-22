@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff", "mypy", "pytest", "pytest-asyncio"]
+dev = ["ruff==0.16.8", "mypy", "pytest", "pytest-asyncio"]
 
 [project.scripts]
 bukep-bot = "bukep_bot.__main__:main"
