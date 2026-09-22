@@ -1,6 +1,7 @@
 from bukep_bot.domain import Lesson
 from bukep_bot.ui.renderers import format_schedule
 
+
 def test_renderer_escapes_html_from_site():
     sched = {
         "Понедельник": [

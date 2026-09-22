@@ -4,8 +4,15 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
 from .config import (
-    CACHE_MAXSIZE, HTTP_RETRIES, HTTP_TIMEOUT, RASP_BASE_URL,
-    RASP_VERIFY_SSL, SCHEDULE_TTL, THROTTLE_RATE, TREE_TTL, Config,
+    CACHE_MAXSIZE,
+    HTTP_RETRIES,
+    HTTP_TIMEOUT,
+    RASP_BASE_URL,
+    RASP_VERIFY_SSL,
+    SCHEDULE_TTL,
+    THROTTLE_RATE,
+    TREE_TTL,
+    Config,
 )
 from .handlers import bells, favorites, help, navigation, schedule, start
 from .infra.disk_cache import DiskCache

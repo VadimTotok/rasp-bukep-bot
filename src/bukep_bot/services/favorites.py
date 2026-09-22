@@ -1,6 +1,7 @@
 from ..domain import GroupContext
 from ..infra.storage import Storage
 
+
 class FavoritesService:
     def __init__(self, storage: Storage):
         self._s = storage

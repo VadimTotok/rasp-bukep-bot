@@ -4,14 +4,20 @@ from aiogram import Bot, Router
 from aiogram.types import CallbackQuery
 
 from ..domain import (
-    DAY_ORDER, GroupContext, SiteUnavailable, today_day_name,
+    DAY_ORDER,
+    GroupContext,
+    SiteUnavailable,
+    today_day_name,
 )
 from ..services.favorites import FavoritesService
 from ..services.rasp import ScheduleService
 from ..ui.callbacks import ScheduleCB
 from ..ui.escape import esc
 from ..ui.keyboards import (
-    kb_all_days_view, kb_day_picker, kb_day_view, kb_retry,
+    kb_all_days_view,
+    kb_day_picker,
+    kb_day_view,
+    kb_retry,
 )
 from ..ui.loaders import run_with_loader
 from ..ui.renderers import format_schedule

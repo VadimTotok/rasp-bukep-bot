@@ -1,20 +1,21 @@
 import asyncio
+import contextlib
 import time
-from typing import Any, Awaitable
+from collections.abc import Awaitable
+from typing import Any
 
 from aiogram import Bot
 from aiogram.exceptions import (
-    TelegramBadRequest, TelegramForbiddenError,
+    TelegramBadRequest,
+    TelegramForbiddenError,
 )
 from aiogram.types import Message
 
 SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
 async def safe_delete(message: Message) -> None:
-    try:
+    with contextlib.suppress(TelegramBadRequest, TelegramForbiddenError):
         await message.delete()
-    except (TelegramBadRequest, TelegramForbiddenError):
-        pass
 
 async def safe_edit(message: Message, text: str, **kwargs) -> None:
     try:
@@ -26,14 +27,10 @@ async def safe_edit(message: Message, text: str, **kwargs) -> None:
 
 async def _keep_typing(bot: Bot, chat_id: int, stop: asyncio.Event) -> None:
     while not stop.is_set():
-        try:
+        with contextlib.suppress(Exception):
             await bot.send_chat_action(chat_id, "typing")
-        except Exception:
-            pass
-        try:
+        with contextlib.suppress(TimeoutError):
             await asyncio.wait_for(stop.wait(), timeout=4.0)
-        except asyncio.TimeoutError:
-            pass
 
 async def run_with_loader(
     target: Message,
@@ -60,18 +57,14 @@ async def run_with_loader(
         while not stop.is_set():
             spin = SPINNER[i % len(SPINNER)]
             elapsed = time.monotonic() - started
-            try:
+            with contextlib.suppress(TelegramBadRequest):
                 await msg.edit_text(
                     f"⏳ <b>{label}</b>\n<code>{spin}</code> {elapsed:.1f} с",
                     parse_mode="HTML",
                 )
-            except TelegramBadRequest:
-                pass
             i += 1
-            try:
+            with contextlib.suppress(TimeoutError):
                 await asyncio.wait_for(stop.wait(), timeout=0.6)
-            except asyncio.TimeoutError:
-                pass
 
     ticker_task = asyncio.create_task(ticker())
     typing_task = asyncio.create_task(_keep_typing(bot, msg.chat.id, stop))
@@ -81,11 +74,7 @@ async def run_with_loader(
         stop.set()
         for t in (ticker_task, typing_task):
             t.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await t
-            except asyncio.CancelledError:
-                pass
-    try:
+    with contextlib.suppress(TelegramForbiddenError):
         await safe_edit(msg, text, reply_markup=kb, parse_mode="HTML")
-    except TelegramForbiddenError:
-        pass

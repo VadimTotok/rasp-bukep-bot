@@ -1,8 +1,8 @@
 import asyncio
 import logging
 import time
+from collections.abc import Awaitable, Callable
 from dataclasses import replace
-from typing import Awaitable, Callable
 
 from cachetools import TTLCache
 

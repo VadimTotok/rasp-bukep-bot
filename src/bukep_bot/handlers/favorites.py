@@ -1,8 +1,12 @@
+import contextlib
 import logging
 
 from aiogram import Bot, F, Router
 from aiogram.types import (
-    CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message,
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
 )
 
 from ..domain import GroupContext, SiteUnavailable
@@ -82,10 +86,8 @@ async def cb_fav_add(
     )
     new_markup = _swap_button(cb.message.reply_markup, old_packed, new_btn)
     if new_markup is not None:
-        try:
+        with contextlib.suppress(Exception):
             await cb.message.edit_reply_markup(reply_markup=new_markup)
-        except Exception:
-            pass
 
 @router.callback_query(FavListCB.filter(F.action == "del"))
 async def cb_fav_del(
@@ -104,10 +106,8 @@ async def cb_fav_del(
     )
     new_markup = _swap_button(cb.message.reply_markup, old_packed, new_btn)
     if new_markup is not None:
-        try:
+        with contextlib.suppress(Exception):
             await cb.message.edit_reply_markup(reply_markup=new_markup)
-        except Exception:
-            pass
 
 @router.callback_query(FavListCB.filter(F.action == "open"))
 async def cb_fav_open(

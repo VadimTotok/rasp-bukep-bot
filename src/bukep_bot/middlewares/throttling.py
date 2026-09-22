@@ -3,6 +3,7 @@ import time
 from aiogram import BaseMiddleware
 from aiogram.types import CallbackQuery, TelegramObject
 
+
 class ThrottlingMiddleware(BaseMiddleware):
     def __init__(self, rate: float = 1.5):
         super().__init__()

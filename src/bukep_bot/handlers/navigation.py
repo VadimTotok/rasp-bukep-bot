@@ -7,11 +7,20 @@ from ..domain import GroupContext, SiteUnavailable
 from ..services.favorites import FavoritesService
 from ..services.rasp import DirectoryService, ScheduleService
 from ..ui.callbacks import (
-    CourseCB, FacultyCB, GroupPickCB, MenuCB, SpecialtyCB,
+    CourseCB,
+    FacultyCB,
+    GroupPickCB,
+    MenuCB,
+    SpecialtyCB,
 )
 from ..ui.escape import esc
 from ..ui.keyboards import (
-    kb_courses, kb_faculties, kb_groups, kb_retry, kb_specialties, shorten,
+    kb_courses,
+    kb_faculties,
+    kb_groups,
+    kb_retry,
+    kb_specialties,
+    shorten,
 )
 from ..ui.loaders import run_with_loader, safe_delete
 from .schedule import open_group

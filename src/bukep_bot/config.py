@@ -1,3 +1,4 @@
+import contextlib
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -44,8 +45,6 @@ def load_config() -> Config:
             "Положите его в .env (BOT_TOKEN=...) или в переменную окружения."
         )
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    try:
+    with contextlib.suppress(OSError):
         DATA_DIR.chmod(0o700)
-    except OSError:
-        pass
     return Config(bot_token=token, data_dir=DATA_DIR)

@@ -1,3 +1,4 @@
+import contextlib
 import hashlib
 import logging
 import time
@@ -54,10 +55,8 @@ class Storage:
         self._db.row_factory = aiosqlite.Row
         await self._db.executescript(_SCHEMA)
         await self._db.commit()
-        try:
+        with contextlib.suppress(OSError):
             self._path.chmod(0o600)
-        except OSError:
-            pass
 
     async def close(self) -> None:
         if self._db is not None:

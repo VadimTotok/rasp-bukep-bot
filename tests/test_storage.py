@@ -3,6 +3,7 @@ import pytest
 from bukep_bot.domain import GroupContext
 from bukep_bot.infra.storage import Storage, make_ctx_id
 
+
 @pytest.fixture
 async def storage(tmp_path):
     s = Storage(tmp_path / "test.db")

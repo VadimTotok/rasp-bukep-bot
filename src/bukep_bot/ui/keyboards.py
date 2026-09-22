@@ -1,14 +1,23 @@
 from aiogram.types import (
-    InlineKeyboardButton, InlineKeyboardMarkup,
-    KeyboardButton, ReplyKeyboardMarkup,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardMarkup,
 )
 
+from ..config import GITHUB_URL, ISSUES_URL
 from ..domain import DAY_EMOJI, DAY_ORDER, Item, Schedule, today_day_name
 from .callbacks import (
-    BellsCB, CourseCB, FacultyCB, FavListCB, GroupPickCB,
-    HelpCB, MenuCB, ScheduleCB, SpecialtyCB,
+    BellsCB,
+    CourseCB,
+    FacultyCB,
+    FavListCB,
+    GroupPickCB,
+    HelpCB,
+    MenuCB,
+    ScheduleCB,
+    SpecialtyCB,
 )
-from ..config import GITHUB_URL, ISSUES_URL
 
 DAY_SHORT = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
 

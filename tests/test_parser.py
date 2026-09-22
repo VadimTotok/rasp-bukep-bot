@@ -5,7 +5,9 @@ import pytest
 from bukep_bot.domain import DAY_ORDER
 from bukep_bot.infra.html import soup_of
 from bukep_bot.infra.rasp_parser import (
-    is_empty_schedule, parse_schedule, parse_soup,
+    is_empty_schedule,
+    parse_schedule,
+    parse_soup,
 )
 
 MINI_HTML = """
@@ -52,20 +54,20 @@ def test_mini_schedule_parses_correctly():
     lessons = sched["Понедельник"]
     assert len(lessons) == 2
 
-    l1, l2 = lessons
+    first, second = lessons
 
-    assert l1.para == "1"
-    assert l1.week == "numerator"
-    assert l1.subject == "Математика"
-    assert l1.type == "Лекция"
-    assert l1.room == "ауд. 101"
-    assert l1.teachers == ("Иванов И.И.", "Петров П.П.")
+    assert first.para == "1"
+    assert first.week == "numerator"
+    assert first.subject == "Математика"
+    assert first.type == "Лекция"              # сокращено из "Лекционное занятие"
+    assert first.room == "ауд. 101"
+    assert first.teachers == ("Иванов И.И.", "Петров П.П.")
 
-    assert l2.para == "2"
-    assert l2.week == "both"
-    assert l2.subject == "Физика"
-    assert l2.type == "Практика"
-    assert l2.teachers == ()
+    assert second.para == "2"
+    assert second.week == "both"
+    assert second.subject == "Физика"
+    assert second.type == "Практика"
+    assert second.teachers == ()
 
 
 def test_mini_schedule_denominator():
@@ -77,7 +79,6 @@ def test_parse_soup_accepts_soup_object():
     soup = soup_of(MINI_HTML)
     sched = parse_soup(soup)
     assert "Понедельник" in sched
-
 
 def test_all_days_from_day_order():
     sched = parse_schedule(MINI_HTML)
@@ -105,19 +106,22 @@ def test_real_schedule_parses(schedule_html):
     for day in sched:
         assert day in DAY_ORDER, f"неизвестный день: {day!r}"
 
+
 def test_real_schedule_lessons_have_required_fields(schedule_html):
     sched = parse_schedule(schedule_html)
     for day, lessons in sched.items():
-        for i, l in enumerate(lessons):
-            assert l.para, f"{day}[{i}]: нет номера пары"
-            assert l.subject, f"{day}[{i}]: нет предмета"
-            assert l.week in ("both", "numerator", "denominator"), \
-                f"{day}[{i}]: плохая неделя {l.week!r}"
+        for i, lesson in enumerate(lessons):
+            assert lesson.para, f"{day}[{i}]: нет номера пары"
+            assert lesson.subject, f"{day}[{i}]: нет предмета"
+            assert lesson.week in ("both", "numerator", "denominator"), \
+                f"{day}[{i}]: плохая неделя {lesson.week!r}"
+
 
 def test_real_schedule_has_lessons(schedule_html):
     sched = parse_schedule(schedule_html)
     total = sum(len(lessons) for lessons in sched.values())
     assert total > 0, "расписание распарсилось, но пар нет"
+
 
 def test_empty_fixture_detected(empty_html):
     assert is_empty_schedule(empty_html) is True
