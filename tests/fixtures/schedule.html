@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" oncontextmenu="return false;" onselectstart="return false;"
+style="-moz-user-select: none">
+<head><link rel="stylesheet" type="text/css" href="/Resource/default.css" />
+    
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date();
+            a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-45282014-3', 'bukep.ru');
+        ga('send', 'pageview');
+    </script>
+    <script type="text/javascript">
+        function ScheduleClock(idFil) {
+            var _timesheet;
+            //Ключ значения в json это время занятия в минутах
+            $.getJSON("timeLessons.json", { contentType: "application/json; charset=utf-8" }, function (json) {
+                _timesheet = json["idFil"][idFil];
+
+                var _months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
+                var _days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+                var _delimited = true;
+
+                function FormatDay(date) {
+                    return _days[date.getDay()];
+                }
+
+                function FormatDate(date) {
+                    var day = date.getDate();
+                    var year = date.getFullYear();
+
+                    if (day < 10) day = "0" + day;
+
+                    return day + "&nbsp;" + _months[date.getMonth()] + "&nbsp;" + year;
+                }
+
+                function FormatTime(date) {
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var delimiter = (_delimited) ? ":" : "&nbsp;";
+
+                    if (hours < 10) hours = "0" + hours;
+                    if (minutes < 10) minutes = "0" + minutes;
+
+                    return hours + "<span style=\"font-family: courier new;\">" + delimiter + "</span>" + minutes;
+                }
+
+                function GetLessons(day) {
+                    var result = _timesheet[day];
+                    if (!result) result = _timesheet["any"];
+
+                    return result;
+                }
+
+                function GetLesson(date) {
+                    var day = date.getDay();
+                    var key = date.getHours() * 60 + date.getMinutes();
+                    var lessons = GetLessons(day);
+
+                    for (var item in lessons) {
+                        if (key < item) return lessons[item];
+                    }
+
+                    return "&nbsp;";
+                }
+
+                function Update() {
+                    var now = new Date();
+
+                    document.getElementById('watch').innerHTML = FormatDate(now) + "<br />" +
+                        FormatDay(now) + "<br /><span class=\"clock\">" + FormatTime(now) + "</span><br />" +
+                        GetLesson(now) + "<br />" + "Числитель";
+
+                    _delimited = !_delimited;
+                    setTimeout(function () { Update(); }, 500);
+                }
+
+                Update();
+            });
+        }
+        
+    </script>
+
+
+    <link rel="stylesheet" type="text/css" href="/Resource/default.css" /><link href="/Resource/pvm/pvm_core.css" rel="stylesheet" /><link href="/Resource/pvm/pvm_theme.css" rel="stylesheet" />
+
+    <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="bower_components/jquery.cookie/jquery.cookie.js" type="text/javascript"></script>
+    <script src="/Resource/pvm/pvm_script.js" type="text/javascript"></script>
+
+<title>
+	Электронное расписание занятий
+</title></head>
+<body onload="ScheduleClock(1000);">
+
+    <script src="/Resource/pvm/pvm_script.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        initializePreloader();
+    </script>
+
+
+
+    <form name="aspnetForm" method="post" action="./Default.aspx?idFil=1000&amp;tr=gweek&amp;f=10083&amp;s=%u0422%u0435%u0445%u043d%u0438%u0447%u0435%u0441%u043a%u0430%u044f+%u044d%u043a%u0441%u043f%u043b%u0443%u0430%u0442%u0430%u0446%u0438%u044f+%u0438+%u0441%u043e%u043f%u0440%u043e%u0432%u043e%u0436%u0434%u0435%u043d%u0438%u0435+%u0438%u043d%u0444%u043e%u0440%u043c%u0430%u0446%u0438%u043e%u043d%u043d%u044b%u0445+%u0441%u0438%u0441%u0442%u0435%u043c1&amp;k=2&amp;g=8317" id="aspnetForm">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="eCS+Lxco0uIYIkbH/hob1XQ/6xgjNq2v8TiftcCjkWg7XQU0VdLP72dxUD0ciRooVShpgtfZELsScD6gpkq6VJxuUdyQNBRIGFA4sNTHWx8=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=Oj85zD5bE_A-qqA9BYHwVnDN7Rl2zplQxz6Qjb2lgp1rvnbK4fOuafzsiSMEdnPQvETq6fm8P8UG9BGGj48SlNkVNcUj4axYubQZxPcJl4g1&amp;t=638628315619783110" type="text/javascript"></script>
+
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="CA0B0334" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+	<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="EiiqX84Xf1OraNwT5RFYhTiyadmp-dw-Oe1kpOmyZkWdzJIFmWGWnR-QJmGYg-1fA0VE2swB9jPmeV7PTadzVjJl6mA631_R7hGb2i51bfk1" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="zY4mQGJtJq9zPf0kKh4Nr59ycO051NytM14GeGLOxU7G5FlV1xfirYnWPDQnI7LFh59TkFhNcR5d1kxjNiOF3tdVitFTvFUsTFFgTni/QFjCDFymlSplIpnIEHRd7ToYmeUOs7yelYauqNYeUqe39JD6yXPJmyx5clZEpiTff7aldICeW7TQ7HpRygzOqSAniF1i1tGumDoGIb9PVhunGb6LgPAS6XUkXUrYyp6YS6Kib/XphGBl7VlA2VjO73N/idqCzNBJjPSu8GEZQSwk0W0HAvM2SyK331xiGPGzxSWu+ZzLsOy/ah2hV1y9gWh1SeZD8lvfqTqBl/e4XmfTaVygBmhGcowE5GPeMWy8q91BBOUiono6xil/ZRjqD+nNyY4GA6cUWKUfTdFL2Jkv3rfag82V1G4pR7fp/VcTTvacNW7xKZPZoxQT4G8wbYgrw2JTyc5j7Ep69ZdIKEAoEufiSqsJg1knY6qbTjn8sxDbGGnJJmDC5JcZqxtv6PSrJPsO2aR1Rnsh2G4Ia3g4v9M7YPXZUiWfs67UaeBWnSmh6O+D44PRvd2yoEPu/gi6w2srjKl+ogFbP4E08uuDgeMBxWNII1OjzoN7MUGzyTJ/3ZIAlHd8z15UilN/iA92uMKshEqVtLdEwd7NZO4MES9QJoXyWpNL5MiAI8aFaYWI+b/hSv3kO/xUDrnBqpbDxGNLAPDLyzitExRe0foca4I44A/O9kjWah/05eXlBVjK8u2sVchDd+nrj19c15iq400mKu66pvUf6gSd/DyZaQJppSrZ6Q55cGMqcCBfnrFC0Q+P8F/0Sposquub0wJXu4loZ2nIhMuNMipHeueBNG43v1SiF174GTMHVbZkF/Lh0Qs1y9F041c7HoFO722U" />
+</div>
+        <table width="100%" style="border-collapse: collapse">
+            <tr>
+                <td style="height: 124px; background: url(images/grad.jpg) repeat-x; vertical-align: top;">
+                    <div id="ctl00_dNameFIL" class="logo" style="background-image:url(images/logo1000.png););">
+                    Белгородский университет
+                    <br />
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; кооперации, экономики и права <br />
+                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span > Электронное
+                        расписание занятий</span ></div>
+                </td>
+                <td style="height: 124px; background: url(images/grad.jpg) repeat-x; vertical-align: top; text-align: center;">
+                    <table>
+                        <tr>
+                            <td class="button-creater-pvm" colspan="2">
+                                <button onclick="mountPvm()" type="button">
+                                    <i class="icon">&#xe800;</i>
+                                    <span>Версия для слабовидящих</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="ctl00_pSafetyLesson" class="celll" style="margin-top: 15px;">
+	
+                                    <span><b>УРОК БЕЗОПАСНОСТИ</b></span><br/>
+                                    <span>ежедневно</span><br/>
+                                    <span>14:00 - 14:15</span>
+                                
+</div>
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="color: #666666; vertical-align: middle; text-align: center; font-size: 12px; font-weight: bold; background: url(images/grad.jpg) repeat-x;">
+                    <div id="watch">
+                        <noscript>
+                            Включите<br />
+                            поддержку<br />
+                            JavaScript
+                        </noscript>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    
+    <table width="100%">
+        <tr>
+            <td>
+                <span id="ctl00_menu_LblBreadCrumps"><table id="tbl_breadcrumps"><tr>
+<td class="tail_blue"></td><td class="middle_blue"><a href="Default.aspx?idFil=1000">Главная</a></td>
+<td class="tail_blue_tip_blue"></td>
+<td class="middle_blue"><a href="Default.aspx?idFil=1000&tr=1">Факультеты</a></td>
+<td class="tail_blue_tip_blue"></td>
+<td class="middle_blue"><a href="Default.aspx?idFil=1000&tr=s&f=10083">Специальности</a></td>
+<td class="tail_blue_tip_blue"></td>
+<td class="middle_blue"><a href="Default.aspx?idFil=1000&tr=k&f=10083&s=Техническая эксплуатация и сопровождение информационных систем1">Курсы</a></td>
+<td class="tail_blue_tip_blue"></td>
+<td class="middle_blue"><a href="Default.aspx?idFil=1000&tr=g&f=10083&s=Техническая эксплуатация и сопровождение информационных систем1&k=2">Группы</a></td>
+<td class="tail_blue_tip_red"></td>
+<td class="middle_red">Расписание ТЭС-251</td>
+<td class="tip_red"></td>
+</tr></table></span>
+
+            </td>
+            <td style="text-align: right; padding-right: 5px;">&nbsp;</td>
+        </tr>
+    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    
+
+    <div id="ctl00_head_Panel11">
+	
+        <table id="ctl00_head_TblAll" border="0" style="width:100%;">
+		<tr>
+			<td></td><td align="center" valign="top" style="width:100%;"><table id="ctl00_head_Tbl_rasp1" class="celll" cellspacing="0" cellpadding="0" align="Center" border="0" style="font-family:Tahoma;font-size:9pt;font-weight:bold;border-collapse:collapse;">
+				<tr>
+					<td><table cellspacing="1" cellpadding="1" align="Center" border="0">
+						<tr>
+							<td class="day_in_table" style="width:400px;"><table class="tbl_day" border="0">
+								<tr class="day">
+									<td colspan="2">Понедельник</td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;">2<br></td><td class="para" style="width:350px;"><span>Разговоры о важном <br>   Онлайн / Мой БУКЭП<br></span><input type="submit" name="ctl00$head$ctl03" value="доц., преп., мастер пр.об. Чуб В.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl03&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=1226&quot;, false, false))" class="fioprep_hight" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">3<br></td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Операционные системы и среды <br>Лекционное занятие   301<br></span><input type="submit" name="ctl00$head$ctl05" value="доц. Александров В.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl05&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=868&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">4<br></td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Математический аппарат в отрасли информационных технологий <br>Лекционное занятие   504н<br></span><input type="submit" name="ctl00$head$ctl07" value="доц. Костина И.Б." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl07&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=167447&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">5<br></td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Основы работы с информацией <br>Лекционное занятие   118<br></span><input type="submit" name="ctl00$head$ctl09" value="ст. преп. Дмитриева Ю.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl09&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=18567&quot;, false, false))" class="fioprep" /></td>
+								</tr>
+							</table></td><td class="day_in_table" style="width:400px;"><table class="tbl_day" border="0">
+								<tr class="day">
+									<td colspan="2">Вторник</td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">2<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Психология общения <br>Лекционное занятие   3<br></span><input type="submit" name="ctl00$head$ctl12" value="доц. Кохан Ж.С." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl12&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=83520&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/pink.jpg');">2<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/pink.jpg');"><span>История потребительской кооперации России <br>Практическое занятие   310<br></span><input type="submit" name="ctl00$head$ctl14" value="ст. преп. Богатырева Ю.Ф." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl14&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=88183&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">3<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>История потребительской кооперации России <br>Лекционное занятие   305<br></span><input type="submit" name="ctl00$head$ctl16" value="ст. преп. Богатырева Ю.Ф." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl16&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=88183&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">3<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Основы финансовой грамотности <br>Лекционное занятие   3<br></span><input type="submit" name="ctl00$head$ctl18" value="доц. Алехина Е.С." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl18&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=869&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">4<br></td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>История России <br>Лекционное занятие   3<br></span><input type="submit" name="ctl00$head$ctl20" value="доц. Рыболова Е.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl20&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=129507&quot;, false, false))" class="fioprep" /></td>
+								</tr>
+							</table></td><td class="day_in_table" style="width:400px;"><table class="tbl_day" border="0">
+								<tr class="day">
+									<td colspan="2">Среда</td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">2<br></td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Математический аппарат в отрасли информационных технологий <br>Лабораторное занятие   108<br></span><input type="submit" name="ctl00$head$ctl23" value="доц. Костина И.Б." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl23&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=167447&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/pink.jpg');">3<br></td><td class="para" style="width:350px;background-image:url('./images/pink.jpg');"><span>Иностранный язык в профессиональной деятельности <br>Практическое занятие   05<br></span><input type="submit" name="ctl00$head$ctl25" value="ст. преп. Извекова Ю.С." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl25&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=20328&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">4<br></td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Математическое моделирование <br>Лекционное занятие   118<br></span><input type="submit" name="ctl00$head$ctl27" value="ст. преп. Дмитриева Ю.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl27&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=18567&quot;, false, false))" class="fioprep" /></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table></td>
+				</tr><tr>
+					<td><table cellspacing="1" cellpadding="1" align="Center" border="0">
+						<tr>
+							<td class="day_in_table" style="width:400px;"><table class="tbl_day" border="0">
+								<tr class="day">
+									<td colspan="2">Четверг</td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">1<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Основы информационной безопасности <br>Лабораторное занятие   103<br></span><input type="submit" name="ctl00$head$ctl31" value="доц. Пономаренко С.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl31&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=1117&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">1<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Операционные системы и среды <br>Лабораторное занятие   107<br></span><input type="submit" name="ctl00$head$ctl33" value="доц. Заливин А.Н." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl33&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=135069&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">2<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Основы информационной безопасности <br>Лекционное занятие   103<br></span><input type="submit" name="ctl00$head$ctl35" value="доц. Пономаренко С.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl35&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=1117&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/pink.jpg');">2<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/pink.jpg');"><span>История России <br>Практическое занятие   310<br></span><input type="submit" name="ctl00$head$ctl37" value="доц. Рыболова Е.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl37&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=129507&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/pink.jpg');">3<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/pink.jpg');"><span>Основы финансовой грамотности <br>Практическое занятие   506<br></span><input type="submit" name="ctl00$head$ctl39" value="доц. Алехина Е.С." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl39&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=869&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">3<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Основы работы с информацией <br>Лабораторное занятие   115<br></span><input type="submit" name="ctl00$head$ctl41" value="асс. Шевелев И.М." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl41&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=175326&quot;, false, false))" class="fioprep" /></td>
+								</tr>
+							</table></td><td class="day_in_table" style="width:400px;"><table class="tbl_day" border="0">
+								<tr class="day">
+									<td colspan="2">Пятница</td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/pink.jpg');">1<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/pink.jpg');"><span>Психология общения <br>Практическое занятие   321<br></span><input type="submit" name="ctl00$head$ctl44" value="преп. Смыкалов Д.Г." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl44&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=37500&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/green.jpg');">1<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/green.jpg');"><span>Проектирование информационных систем <br>Лекционное занятие   117<br></span><input type="submit" name="ctl00$head$ctl46" value="ст. преп. Дмитриева Ю.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl46&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=18567&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">2<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Проектирование информационных систем <br>Лабораторное занятие   107<br></span><input type="submit" name="ctl00$head$ctl48" value="ст. преп. Дмитриева Ю.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl48&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=18567&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">2<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Математическое моделирование <br>Лабораторное занятие   113<br></span><input type="submit" name="ctl00$head$ctl50" value="ст. преп. Дмитриева Ю.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl50&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=18567&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/yellow.jpg');">3<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/yellow.jpg');"><span>Физическая культура <br>Практическое занятие   Спортивный комплекс<br></span><input type="submit" name="ctl00$head$ctl52" value="ст. преп. Гончаров В.М." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl52&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=19066&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl53" value="ст. преп. Седашов О.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl53&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=19067&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl54" value="ст. преп. Павлова И.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl54&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=19069&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl55" value="преп. Сикачева А.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl55&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=182458&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl56" value="преп. Озхан Л.М." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl56&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=182656&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/yellow.jpg');">3<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/yellow.jpg');"><span>Физическая культура <br>Практическое занятие   Спортивный комплекс<br></span><input type="submit" name="ctl00$head$ctl58" value="ст. преп. Гончаров В.М." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl58&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=19066&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl59" value="ст. преп. Седашов О.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl59&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=19067&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl60" value="ст. преп. Павлова И.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl60&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=19069&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl61" value="преп. Сикачева А.А." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl61&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=182458&quot;, false, false))" class="fioprep" /><input type="submit" name="ctl00$head$ctl62" value="преп. Озхан Л.М." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl62&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=182656&quot;, false, false))" class="fioprep" /></td>
+								</tr>
+							</table></td><td class="day_in_table" style="width:400px;"><table class="tbl_day" border="0">
+								<tr class="day">
+									<td colspan="2">Суббота</td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">1<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Операционные системы и среды <br>Лабораторное занятие   106<br></span><input type="submit" name="ctl00$head$ctl65" value="доц. Заливин А.Н." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl65&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=135069&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/pink.jpg');">1<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/pink.jpg');"><span>Психология общения <br>Практическое занятие   317<br></span><input type="submit" name="ctl00$head$ctl67" value="преп. Смыкалов Д.Г." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl67&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=37500&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">2<br>Числ.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Основы работы с информацией <br>Лабораторное занятие   106<br></span><input type="submit" name="ctl00$head$ctl69" value="асс. Шевелев И.М." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl69&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=175326&quot;, false, false))" class="fioprep" /></td>
+								</tr><tr>
+									<td class="num_para" style="width:45px;background-image:url('./images/blue.jpg');">2<br>Знам.</td><td class="para" style="width:350px;background-image:url('./images/blue.jpg');"><span>Математическое моделирование <br>Лабораторное занятие   106<br></span><input type="submit" name="ctl00$head$ctl71" value="ст. преп. Дмитриева Ю.В." onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$head$ctl71&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Default.aspx?idFil=1000&amp;tr=pweek&amp;k=2&amp;p=18567&quot;, false, false))" class="fioprep" /></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table></td>
+				</tr><tr>
+					<td><table cellspacing="1" cellpadding="1" align="Center" border="0">
+						<tr>
+
+						</tr>
+					</table></td>
+				</tr>
+			</table></td><td valign="top"><table class="сolor_designation" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;width:100px;">
+				<tr>
+					<td class="day">Условные<br />обозначения</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/green.jpg');height:50px;width:100px;">Лекция</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/pink.jpg');height:50px;width:100px;">Практическое<br />занятие</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/blue.jpg');height:50px;width:100px;">Лабораторное<br />занятие</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/blue_dark.jpg');height:50px;width:100px;">Экзамен</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/green_dark.jpg');height:50px;width:100px;">Зачет</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/violet.jpg');height:50px;width:100px;">Консультация</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/pink_dark.jpg');height:50px;width:100px;">Курсовая<br />работа</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/orange.jpg');height:50px;width:100px;">Контрольная<br />работа</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/yellow.jpg');height:50px;width:100px;">Физическая<br />культура</td>
+				</tr><tr>
+					<td class="legend" style="background-image:url('./images/gray.jpg');height:50px;width:100px;">Индивидуальный<br />проект</td>
+				</tr><tr>
+					<td class="legend" style="height:50px;width:100px;"><table border="0">
+						<tr>
+							<td style="height:40px;width:10px;">✓</td><td style="height:40px;width:90px;">Изменение в<br />расписании</td>
+						</tr>
+					</table></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table>
+    
+</div>
+
+    
+
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
