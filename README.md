@@ -1,5 +1,9 @@
 # Telegram-бот с расписанием БУКЭП
 
+[![CI](https://github.com/VadimTotok/rasp-bukep-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/VadimTotok/rasp-bukep-bot/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11+-yellow)](https://python.org)
+
 Неофициальный Telegram-бот с расписанием занятий БУКЭП. Удобный
 интерфейс, избранные группы, расписание звонков.
 
