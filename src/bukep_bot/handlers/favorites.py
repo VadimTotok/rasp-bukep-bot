@@ -113,6 +113,7 @@ async def cb_fav_del(
 async def cb_fav_open(
     cb: CallbackQuery, callback_data: FavListCB, *,
     bot: Bot, schedule_svc: ScheduleService, favorites: FavoritesService,
+    week_type: str | None = None,
 ) -> None:
     await cb.answer()
     ctx_id = callback_data.ctx_id
@@ -144,4 +145,5 @@ async def cb_fav_open(
             ctx = new_ctx
 
     await _show_today(cb, ctx, ctx_id, bot=bot, force=False,
-                      schedule_svc=schedule_svc, favorites=favorites)
+                      schedule_svc=schedule_svc, favorites=favorites,
+                      week_type=week_type)

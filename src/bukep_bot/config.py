@@ -1,22 +1,9 @@
 import contextlib
 import os
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
-DATA_DIR = Path(os.environ.get("BUKEP_DATA_DIR", "./data"))
-RASP_BASE_URL = "https://rasp.bukep.ru"
-
-GITHUB_URL = "https://github.com/VadimTotok/rasp-bukep-bot"
-ISSUES_URL = f"{GITHUB_URL}/issues"
-
-RASP_VERIFY_SSL = False
-
-HTTP_TIMEOUT = 15.0
-HTTP_RETRIES = 3
-SCHEDULE_TTL = 600
-TREE_TTL = 86400
-CACHE_MAXSIZE = 2000
-THROTTLE_RATE = 1.5
 
 def _load_dotenv(path: Path = Path(".env")) -> None:
     if not path.exists():
@@ -30,14 +17,34 @@ def _load_dotenv(path: Path = Path(".env")) -> None:
         value = value.strip().strip('"').strip("'")
         os.environ.setdefault(key, value)
 
+_load_dotenv()
+
+DATA_DIR = Path(os.environ.get("BUKEP_DATA_DIR", "./data"))
+RASP_BASE_URL = "https://rasp.bukep.ru"
+
+RASP_VERIFY_SSL = False
+
+HTTP_TIMEOUT = 15.0
+HTTP_RETRIES = 3
+SCHEDULE_TTL = 600
+TREE_TTL = 86400
+CACHE_MAXSIZE = 2000
+THROTTLE_RATE = 1.5
+
+GITHUB_URL = "https://github.com/VadimTotok/rasp-bukep-bot"
+ISSUES_URL = f"{GITHUB_URL}/issues"
+
+_raw_start = os.environ.get("BUKEP_SEMESTER_START", "").strip()
+SEMESTER_START: date | None = date.fromisoformat(_raw_start) if _raw_start else None
+SEMESTER_FIRST_WEEK = os.environ.get("BUKEP_SEMESTER_FIRST_WEEK", "numerator")
+
 @dataclass(frozen=True, slots=True)
 class Config:
     bot_token: str
     data_dir: Path
 
-def load_config() -> Config:
-    _load_dotenv()
 
+def load_config() -> Config:
     token = os.environ.get("BOT_TOKEN", "").strip()
     if not token or ":" not in token:
         raise SystemExit(

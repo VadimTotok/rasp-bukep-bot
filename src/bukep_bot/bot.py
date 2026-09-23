@@ -10,6 +10,8 @@ from .config import (
     RASP_BASE_URL,
     RASP_VERIFY_SSL,
     SCHEDULE_TTL,
+    SEMESTER_FIRST_WEEK,
+    SEMESTER_START,
     THROTTLE_RATE,
     TREE_TTL,
     Config,
@@ -19,17 +21,15 @@ from .infra.disk_cache import DiskCache
 from .infra.rasp_client import RaspClient
 from .infra.storage import Storage
 from .middlewares.throttling import ThrottlingMiddleware
+from .middlewares.week import WeekTypeMiddleware
 from .services.favorites import FavoritesService
 from .services.rasp import DirectoryService, ScheduleService
 
 log = logging.getLogger(__name__)
 
+
 def build_dispatcher() -> Dispatcher:
     dp = Dispatcher()
-    throttling = ThrottlingMiddleware(rate=THROTTLE_RATE)
-    dp.message.middleware(throttling)
-    dp.callback_query.middleware(throttling)
-
     dp.include_router(start.router)
     dp.include_router(navigation.router)
     dp.include_router(schedule.router)
@@ -38,11 +38,13 @@ def build_dispatcher() -> Dispatcher:
     dp.include_router(help.router)
     return dp
 
+
 def build_bot(cfg: Config) -> Bot:
     return Bot(
         token=cfg.bot_token,
         default=DefaultBotProperties(parse_mode="HTML"),
     )
+
 
 async def setup_services(cfg: Config, dp: Dispatcher) -> dict:
     client = RaspClient(
@@ -64,11 +66,20 @@ async def setup_services(cfg: Config, dp: Dispatcher) -> dict:
     )
     favorites_svc = FavoritesService(storage)
 
+    week_mw = WeekTypeMiddleware(SEMESTER_START, SEMESTER_FIRST_WEEK)
+    dp.message.middleware(week_mw)
+    dp.callback_query.middleware(week_mw)
+
+    throttling = ThrottlingMiddleware(rate=THROTTLE_RATE)
+    dp.message.middleware(throttling)
+    dp.callback_query.middleware(throttling)
+
     dp.workflow_data.update({
         "directory": directory,
         "schedule_svc": schedule_svc,
         "favorites": favorites_svc,
         "client": client,
         "storage": storage,
+        "config": cfg,
     })
     return dp.workflow_data

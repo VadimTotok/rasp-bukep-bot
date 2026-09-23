@@ -115,6 +115,15 @@ pytest -v
 - `tests/test_storage.py` — 10 тестов SQLite и `ctx_id`.
 - `tests/test_renderers.py` — 3 теста на HTML-экранирование.
 
+### Настройка недели
+
+В `.env` укажи начало семестра (первый полный понедельник):
+
+    BUKEP_SEMESTER_START=2026-09-07
+    BUKEP_SEMESTER_FIRST_WEEK=numerator
+
+Если не задать бот покажет все пары без фильтра по неделям. В начале каждого семестра дату нужно обновлять.
+
 ## Обратная связь
 
 Нашли баг или есть идея — [откройте issue](https://github.com/VadimTotok/rasp-bukep-bot/issues).

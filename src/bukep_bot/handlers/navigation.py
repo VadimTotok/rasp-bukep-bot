@@ -150,9 +150,11 @@ async def cb_group_pick(
     cb: CallbackQuery, callback_data: GroupPickCB,
     bot: Bot, directory: DirectoryService, favorites: FavoritesService,
     schedule_svc: ScheduleService,
+    week_type: str | None = None,
 ) -> None:
     await cb.answer()
-    f, s, k, g = (callback_data.f, callback_data.s, callback_data.k, callback_data.g)
+    f, s, k, g = (callback_data.f, callback_data.s,
+                  callback_data.k, callback_data.g)
 
     facs = await directory.faculties()
     if f >= len(facs):
@@ -179,4 +181,6 @@ async def cb_group_pick(
         fi=f, si=s, ki=k, gi=g,
     )
     ctx_id = await favorites.ensure_context(ctx)
-    await open_group(cb, ctx, ctx_id, bot=bot, schedule_svc=schedule_svc, favorites=favorites)
+    await open_group(cb, ctx, ctx_id, bot=bot,
+                     schedule_svc=schedule_svc, favorites=favorites,
+                     week_type=week_type)

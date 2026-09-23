@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal
 
 Week = Literal["both", "numerator", "denominator"]
@@ -95,3 +95,25 @@ class SiteUnavailable(BotError):
 
 class ScheduleMissing(BotError):
     """Для группы на сайте нет расписания."""
+
+def week_number(semester_start: date, today: date | None = None) -> int:
+    today = today or date.today()
+    delta = (today - semester_start).days
+    if delta < 0:
+        return 0
+    return delta // 7 + 1
+
+
+def current_week_type(
+    semester_start: date | None,
+    first_week: str,
+    today: date | None = None,
+) -> Literal["numerator", "denominator"] | None:
+    if semester_start is None:
+        return None
+    n = week_number(semester_start, today)
+    if n == 0:
+        return None
+    if n % 2 == 1:
+        return "numerator" if first_week == "numerator" else "denominator"
+    return "denominator" if first_week == "numerator" else "numerator"

@@ -1,6 +1,10 @@
 from ..domain import DAY_EMOJI, DAY_ORDER, Lesson, Schedule, bell_for
 from .escape import esc
 
+WEEK_LABEL = {
+    "numerator": "Числитель",
+    "denominator": "Знаменатель",
+}
 
 def _fmt_lesson(day_name: str, lesson: Lesson) -> list[str]:
     prefix = lesson.para
@@ -38,21 +42,39 @@ def _stale_note() -> str:
     return ("\n<i>⚠️ Сайт вуза недоступен, показаны данные из кэша. "
             "Могут быть устаревшими.</i>")
 
+
+def _week_note(week_type: str | None) -> str:
+    if week_type is None:
+        return ""
+    label = WEEK_LABEL.get(week_type, week_type)
+    return f"\n🗓 <i>Сейчас: {esc(label)}</i>"
+
+
+def _filter_by_week(
+    lessons: list[Lesson], week_type: str | None,
+) -> list[Lesson]:
+    if week_type is None:
+        return lessons
+    return [les for les in lessons if les.week in ("both", week_type)]
+
+
 def format_schedule(
     schedule: Schedule,
     group_label: str = "",
     day: str | None = None,
     is_today: bool = False,
     stale: bool = False,
+    week_type: str | None = None,
 ) -> str:
     head = f"📅 <b>Расписание {esc(group_label)}</b>"
     if day is not None:
         head += f"\n{_day_header(day, is_today)}"
+    head += _week_note(week_type)
     if stale:
         head += _stale_note()
 
     if day is not None:
-        day_lessons = schedule.get(day, [])
+        day_lessons = _filter_by_week(schedule.get(day, []), week_type)
         if not day_lessons:
             return head + "\n\nНа этот день занятий нет."
         out = [head, ""]
@@ -64,7 +86,7 @@ def format_schedule(
     out = [head, ""]
     any_lessons = False
     for d in DAY_ORDER:
-        day_lessons = schedule.get(d, [])
+        day_lessons = _filter_by_week(schedule.get(d, []), week_type)
         if not day_lessons:
             continue
         any_lessons = True
